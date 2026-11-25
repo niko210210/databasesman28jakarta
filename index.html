@@ -1,0 +1,670 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SMAN 28 Student Database</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: sidebar + content on desktop, bottom tab bar on phones. Single dark fire look, committed on purpose. */
+:root{
+  --bg:#0a0605;--bg2:#120a08;--glass:rgba(255,255,255,.045);--glass2:rgba(255,255,255,.08);
+  --line:rgba(255,140,60,.18);--fg:#f6ece6;--mut:#a89388;
+  --red:#e5322d;--org:#ff8a1f;--amber:#ffc15a;--ok:#4fd39a;--bad:#ff5a5a;
+  --fire:linear-gradient(135deg,#e5322d 0%,#ff6a1a 55%,#ffa83a 100%);
+  --disp:"Space Grotesk",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:auto}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.5;
+  padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  background-image:radial-gradient(900px 500px at 85% -10%,rgba(229,50,45,.22),transparent 60%),radial-gradient(700px 500px at -10% 40%,rgba(255,138,31,.12),transparent 60%);
+  background-attachment:fixed;min-height:100vh}
+h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.01em;text-wrap:balance}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;max-width:1500px;margin:0 auto;padding-block:20px}
+.side{position:sticky;top:20px;align-self:start;display:flex;flex-direction:column;gap:18px;padding:18px;border-radius:18px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:38px;height:38px;border-radius:11px;background:var(--fire);display:grid;place-items:center;box-shadow:0 0 22px rgba(255,106,26,.55)}
+.brand b{font-family:var(--disp);font-size:15px;display:block;line-height:1.15}
+.brand span{font-size:11px;color:var(--mut)}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;align-items:center;gap:10px;background:none;border:1px solid transparent;border-radius:11px;padding:10px 12px;color:var(--mut);cursor:pointer;text-align:left;transition:.2s}
+.nav button:hover{color:var(--fg);background:var(--glass)}
+.nav button.on{color:#fff;background:linear-gradient(135deg,rgba(229,50,45,.35),rgba(255,138,31,.22));border-color:var(--line);box-shadow:0 0 18px rgba(255,106,26,.22)}
+.nav svg,.btn svg,.ico svg{width:17px;height:17px;flex:none}
+.sidefoot{font-size:11px;color:var(--mut);border-top:1px solid var(--line);padding-top:12px}
+main{min-width:0;display:flex;flex-direction:column;gap:20px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.top h1{font-size:clamp(22px,3.2vw,32px)}
+.top p{margin:2px 0 0;color:var(--mut)}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:18px;min-width:0}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stat{position:relative;overflow:hidden}
+.stat small{color:var(--mut);display:flex;align-items:center;gap:7px}
+.stat .n{font-family:var(--disp);font-size:clamp(26px,3.4vw,38px);font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;background:var(--fire);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(255,106,26,.35),transparent 70%)}
+.card-t{font-size:15px;margin-bottom:12px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.card-t span{font-size:12px;color:var(--mut);font-family:var(--body)}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:11px;border:1px solid var(--line);background:var(--glass2);padding:9px 14px;cursor:pointer;transition:.2s;white-space:nowrap}
+.btn:hover{border-color:var(--org);box-shadow:0 0 16px rgba(255,106,26,.3)}
+.btn.fire{background:var(--fire);border-color:transparent;color:#fff;font-weight:600;box-shadow:0 4px 22px rgba(229,50,45,.4)}
+.btn.sm{padding:6px 9px;font-size:12px}
+.btn.danger:hover{border-color:var(--bad);box-shadow:0 0 14px rgba(255,90,90,.35)}
+.btn:focus-visible,input:focus-visible,select:focus-visible,.nav button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+input,select{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+input::placeholder{color:#6f5f56}
+select option{background:#1a0f0b}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:11px;padding:3px 9px;border-radius:99px;background:rgba(255,138,31,.14);border:1px solid var(--line);color:var(--amber);white-space:nowrap}
+.tw{overflow-x:auto;border-radius:14px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:980px}
+th{position:sticky;top:0;background:#1a0d0a;text-align:left;padding:11px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--amber);cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:hover{color:#fff}
+th .ar{opacity:.5;margin-left:4px}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,140,60,.08);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody tr{transition:.15s}
+tbody tr:hover{background:linear-gradient(90deg,rgba(229,50,45,.16),rgba(255,138,31,.07))}
+.tag{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.tag.L{color:#7cc4ff}.tag.P{color:#ff8fc0}
+.pager{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;color:var(--mut)}
+.pager .pg{display:flex;gap:6px;align-items:center}
+.pager select{width:auto}
+.empty{padding:42px 16px;text-align:center;color:var(--mut)}
+.empty h3{color:var(--fg);margin:8px 0 4px}
+.empty .ico{display:inline-grid;place-items:center;width:54px;height:54px;border-radius:16px;background:var(--glass2);color:var(--org)}
+.empty .ico svg{width:26px;height:26px}
+.hide{display:none!important}
+.back{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);display:grid;place-items:center;padding:16px;z-index:50;animation:fi .2s}
+.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:#150b08;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 0 60px rgba(229,50,45,.25);animation:up .25s}
+.modal h2{font-size:20px;margin-bottom:14px}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fgrid .full{grid-column:1/-1}
+.err{color:var(--bad);font-size:12px;min-height:14px}
+.mfoot{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.det{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 12px}
+.det dt{color:var(--mut)}.det dd{margin:0;word-break:break-word}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1d0f0b;border:1px solid var(--org);border-radius:12px;padding:10px 16px;z-index:80;box-shadow:0 0 24px rgba(255,106,26,.4);animation:up .25s;max-width:90vw}
+.pv{padding:14px;border-radius:12px;background:rgba(255,138,31,.1);border:1px dashed var(--org);margin-top:12px}
+.pv b{font-family:var(--disp);font-size:24px;color:var(--amber)}
+.radio{display:flex;flex-direction:column;gap:8px}
+.radio label{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:11px;cursor:pointer}
+.radio input{width:auto}
+.radio label:has(input:checked){border-color:var(--org);background:rgba(255,138,31,.12)}
+/* charts */
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart text{fill:var(--mut);font-size:11px;font-family:var(--body)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--mut)}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+/* building map */
+.bld{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.floor{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;align-items:stretch;margin-top:10px}
+.fl{display:grid;place-items:center;border-radius:12px;background:var(--glass2);font-family:var(--disp);font-size:12px;color:var(--amber);text-align:center;padding:4px}
+.rooms{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-radius:12px;border:1px dashed var(--line);min-height:62px;align-items:center}
+.room{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:linear-gradient(135deg,rgba(229,50,45,.22),rgba(255,138,31,.1));cursor:pointer;transition:.2s;text-align:left;min-width:88px}
+.room:hover,.room.on{border-color:var(--amber);box-shadow:0 0 16px rgba(255,138,31,.4);transform:translateY(-2px)}
+.room b{font-family:var(--disp);display:block}
+.room small{color:var(--mut)}
+.none{color:var(--mut);font-size:12px}
+.fsum{font-size:12px;color:var(--mut);margin-top:6px}
+.tabs{display:none}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:980px){
+  .app{grid-template-columns:minmax(0,1fr);gap:16px}
+  .side{display:none}
+  .tabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(14,7,5,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px))}
+  .tabs button{flex:1;background:none;border:0;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;padding:6px 2px;border-radius:10px;cursor:pointer}
+  .tabs button svg{width:20px;height:20px}
+  .tabs button.on{color:#fff;background:linear-gradient(135deg,rgba(229,50,45,.35),rgba(255,138,31,.2))}
+  main{padding-bottom:84px}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3,.g2,.bld{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:520px){.fgrid{grid-template-columns:minmax(0,1fr)}.det{grid-template-columns:100px minmax(0,1fr)}.floor{grid-template-columns:54px minmax(0,1fr)}}
+</style>
+<div class="app">
+  <aside class="side" id="side"></aside>
+  <main id="main"></main>
+</div>
+<nav class="tabs" id="tabs"></nav>
+<div id="overlay"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script>
+/* ===== SMAN 28 Student Database: data, storage, filter, sort, export ===== */
+var AGAMA = ["Islam","Kristen Protestan","Katolik","Hindu","Buddha","Konghucu"];
+var TINGKAT = ["X","XI","XII"];
+var DEFAULT_MAP = {
+  "B1":["XI 1","XI 2"],
+  "A2":["XII 1","XII 2","XII 3","XII 4","XII 5"],
+  "B2":["XII 6","XII 7","XI 3","XI 4"],
+  "A3":["X1","X2","X3","X4","X5","X6"],
+  "B3":["X7","XI 5","XI 6","XI 7"]
+};
+var LS_S = "sman28_students_v1", LS_C = "sman28_classes_v1";
+var mem = {};
+function lsGet(k){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch(e){ return mem[k] || null; } }
+function lsSet(k,v){ mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+
+function classLabel(t,n){ return t === "X" ? "X" + n : t + " " + n; }
+function parseLabel(l){ var m = /^(XII|XI|X)\s?(\d+)$/.exec(l); return m ? {t:m[1], n:+m[2]} : {t:"X", n:0}; }
+function classKey(l){ var p = parseLabel(l); return TINGKAT.indexOf(p.t) * 100 + p.n; }
+
+function defaultClasses(){
+  var out = [];
+  Object.keys(DEFAULT_MAP).forEach(function(k){
+    DEFAULT_MAP[k].forEach(function(l){ var p = parseLabel(l); out.push({label:l, tingkat:p.t, no:p.n, gedung:k[0], lantai:+k[1]}); });
+  });
+  return out.sort(function(a,b){ return classKey(a.label) - classKey(b.label); });
+}
+
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+var NM = {
+  Islam:{L:["Ahmad","Muhammad","Rizky","Fajar","Dimas","Bagas","Raka","Arif","Haikal","Naufal","Reza","Farhan","Ilham","Yusuf","Alif","Rafi","Satria","Bayu","Rendi","Galih","Dafa","Faisal","Zidan","Hendra"],
+    P:["Siti","Nur","Aisyah","Putri","Nabila","Salsabila","Dewi","Fitri","Aulia","Zahra","Rahma","Annisa","Intan","Anisa","Syifa","Naila","Khairunnisa","Alya","Tiara","Mutiara","Nadia","Cindy","Laila","Amelia"],
+    S:["Pratama","Saputra","Hidayat","Wijaya","Ramadhan","Kurniawan","Firmansyah","Maulana","Nugroho","Setiawan","Hakim","Fauzi","Lestari","Wulandari","Rahayu","Safitri","Permata","Utami","Handayani","Susanti","Rahmawati","Hartono","Syahputra","Aryani"]},
+  Kristen:{L:["Daniel","Samuel","Joshua","Andreas","Christian","Yosua","Michael","Jonathan"],P:["Grace","Natalia","Jessica","Angelina","Rebecca","Christine","Priscilla","Debora"],S:["Simanjuntak","Siregar","Manurung","Pangaribuan","Sitorus","Tampubolon","Lumban Gaol","Wowor"]},
+  Katolik:{L:["Yohanes","Antonius","Fransiskus","Bernardus","Gabriel","Albertus","Stefanus","Markus"],P:["Maria","Katarina","Agnes","Theresia","Veronica","Angela","Clara","Cecilia"],S:["Nainggolan","Gunawan","Santoso","Lopes","Da Costa","Hutapea","Sihombing","Pardede"]},
+  Hindu:{L:["I Made","I Gede","I Putu","I Kadek","I Komang","I Wayan"],P:["Ni Made","Ni Putu","Ni Kadek","Ni Luh","Ni Komang","Ni Wayan"],S:["Suartana","Wirawan","Dharma","Mahendra","Adnyana","Sudiarta","Pradnyana","Ari Wibawa"]},
+  Buddha:{L:["Kevin","Jonathan","Alvin","Steven","Hendrik","Billy","Felix"],P:["Vania","Stefany","Michelle","Jocelyn","Veronica","Cynthia","Felicia"],S:["Tanuwijaya","Halim","Wijaya","Tan","Lim","Gunadi","Chandra","Salim"]},
+  Konghucu:{L:["Anthony","Edwin","Jason","Randy","Kenneth","William"],P:["Livia","Meilany","Cherly","Vivian","Stella","Angeline"],S:["Tjandra","Kusuma","Lie","Wong","Oei","Susanto","Hartanto","Limantara"]}
+};
+var MID = ["Adi","Putra","Bintang","Cahya","Eka","Indah","Kartika","Surya","Bunga","Dwi","Tri","Alya","Ayu","Nur","Bagus"];
+var KOTA = ["Jakarta","Bandung","Bekasi","Depok","Bogor","Tangerang","Surabaya","Semarang","Yogyakarta","Medan","Palembang","Makassar","Denpasar","Malang","Cirebon","Padang","Pontianak","Balikpapan","Manado","Solo","Bandar Lampung","Banjarmasin"];
+var KOTA_AGAMA = {Hindu:["Denpasar","Gianyar","Singaraja","Tabanan","Jakarta"],Kristen:["Medan","Manado","Jakarta","Pematang Siantar"],Katolik:["Kupang","Flores","Jakarta","Medan","Manado"]};
+
+function pick(r,a){ return a[Math.floor(r() * a.length)]; }
+function pad2(n){ return (n < 10 ? "0" : "") + n; }
+
+function genStudents(classes){
+  var r = rng(28028), used = {}, out = [];
+  classes.forEach(function(c){
+    var count = 14 + Math.floor(r() * 3); // 14-16 per class
+    for (var i = 0; i < count; i++){
+      var w = r() * 100, ag;
+      ag = w < 78 ? "Islam" : w < 87 ? "Kristen Protestan" : w < 92 ? "Katolik" : w < 95 ? "Hindu" : w < 98 ? "Buddha" : "Konghucu";
+      if (out.length < 6 && !i) ag = AGAMA[out.length]; // pastikan semua agama muncul
+      var key = ag === "Kristen Protestan" ? "Kristen" : ag, pool = NM[key];
+      var g = r() < 0.52 ? "P" : "L";
+      var nama = pick(r, pool[g]) + (r() < 0.55 ? " " + pick(r, MID) : "") + " " + pick(r, pool.S);
+      var tempat = KOTA_AGAMA[key] && r() < 0.6 ? pick(r, KOTA_AGAMA[key]) : pick(r, KOTA);
+      var base = c.tingkat === "X" ? 2010 : c.tingkat === "XI" ? 2009 : 2008;
+      var y = base + (r() < 0.65 ? 0 : 1), m = 1 + Math.floor(r() * 12), d = 1 + Math.floor(r() * 28);
+      if (c.tingkat === "X" && y === 2011) y = 2010;
+      var nis; do { nis = String(10000 + Math.floor(r() * 90000)); } while (used[nis]);
+      used[nis] = 1;
+      out.push({nis:nis, nama:nama, tempat:tempat, tgl:y + "-" + pad2(m) + "-" + pad2(d), gender:g, agama:ag, kelas:c.label});
+    }
+  });
+  return out;
+}
+
+var classes = lsGet(LS_C);
+if (!classes || !classes.length){ classes = defaultClasses(); lsSet(LS_C, classes); }
+var students = lsGet(LS_S);
+if (!students || !students.length){ students = genStudents(classes); lsSet(LS_S, students); }
+function saveAll(){ lsSet(LS_S, students); lsSet(LS_C, classes); }
+function resetData(){ classes = defaultClasses(); students = genStudents(classes); saveAll(); }
+
+function classInfo(label){ for (var i = 0; i < classes.length; i++) if (classes[i].label === label) return classes[i]; return null; }
+function loc(s){ var c = classInfo(s.kelas); return c ? {g:c.gedung, l:c.lantai} : {g:"-", l:"-"}; }
+function genderText(g){ return g === "L" ? "Laki-laki" : "Perempuan"; }
+function fmtDate(iso){ var p = iso.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+function uniqueNIS(){ var set = {}; students.forEach(function(s){ set[s.nis] = 1; }); var n; do { n = String(10000 + Math.floor(Math.random() * 90000)); } while (set[n]); return n; }
+function esc(v){ return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+/* ===== filter + sort ===== */
+var F = {q:"", field:"all", agama:"", gender:"", tingkat:"", kelas:"", gedung:"", lantai:""};
+var SORT = {key:"nis", dir:1};
+function emptyFilter(){ F = {q:"", field:F.field, agama:"", gender:"", tingkat:"", kelas:"", gedung:"", lantai:""}; }
+function hasFilter(){ return !!(F.q || F.agama || F.gender || F.tingkat || F.kelas || F.gedung || F.lantai); }
+
+function rowText(s, field){
+  var lc = loc(s);
+  var m = {nis:s.nis, nama:s.nama, tempat:s.tempat, tgl:s.tgl + " " + fmtDate(s.tgl), gender:genderText(s.gender) + " " + s.gender,
+    agama:s.agama, kelas:s.kelas + " " + s.kelas.replace(" ", "")};
+  if (field !== "all") return m[field] || "";
+  return Object.keys(m).map(function(k){ return m[k]; }).join(" | ") + " | gedung " + lc.g + " lantai " + lc.l;
+}
+function matches(s, f){
+  var lc = loc(s), p = parseLabel(s.kelas);
+  if (f.agama && s.agama !== f.agama) return false;
+  if (f.gender && s.gender !== f.gender) return false;
+  if (f.tingkat && p.t !== f.tingkat) return false;
+  if (f.kelas && s.kelas !== f.kelas) return false;
+  if (f.gedung && lc.g !== f.gedung) return false;
+  if (f.lantai && String(lc.l) !== String(f.lantai)) return false;
+  if (f.q){
+    var q = f.q.toLowerCase().trim().replace(/\s+/g, " ");
+    if (rowText(s, f.field).toLowerCase().indexOf(q) < 0) return false;
+  }
+  return true;
+}
+function sortVal(s, k){
+  if (k === "nis") return +s.nis;
+  if (k === "kelas") return classKey(s.kelas);
+  if (k === "gedung") return loc(s).g;
+  if (k === "lantai") return loc(s).l === "-" ? 0 : loc(s).l;
+  if (k === "tgl") return s.tgl;
+  if (k === "gender") return genderText(s.gender);
+  return String(s[k]).toLowerCase();
+}
+function getRows(f){
+  var rows = students.filter(function(s){ return matches(s, f); });
+  var k = SORT.key, d = SORT.dir;
+  rows.sort(function(a, b){
+    var x = sortVal(a, k), y = sortVal(b, k);
+    var c = typeof x === "number" ? x - y : (x < y ? -1 : x > y ? 1 : 0);
+    if (c === 0) c = classKey(a.kelas) - classKey(b.kelas) || (+a.nis - +b.nis);
+    return c * d;
+  });
+  return rows;
+}
+var NUMERIC = {nis:1, kelas:1, lantai:1, tgl:1};
+var COLS = [
+  {k:"nis", t:"NIS"}, {k:"nama", t:"Nama Lengkap"}, {k:"tempat", t:"Tempat Lahir"}, {k:"tgl", t:"Tanggal Lahir"},
+  {k:"gender", t:"Gender"}, {k:"agama", t:"Agama"}, {k:"kelas", t:"Kelas"}, {k:"gedung", t:"Gedung"}, {k:"lantai", t:"Lantai"}
+];
+function dirLabel(k, d){ return NUMERIC[k] ? (d === 1 ? "Terkecil ke terbesar" : "Terbesar ke terkecil") : (d === 1 ? "A-Z" : "Z-A"); }
+
+/* ===== export Excel (ExcelJS) ===== */
+function exportRows(mode, val){
+  if (mode === "all") return students.slice().sort(function(a,b){ return classKey(a.kelas) - classKey(b.kelas) || a.nama.localeCompare(b.nama); });
+  if (mode === "tingkat") return getRows({q:"",field:"all",agama:"",gender:"",tingkat:val,kelas:"",gedung:"",lantai:""});
+  if (mode === "kelas") return getRows({q:"",field:"all",agama:"",gender:"",tingkat:"",kelas:val,gedung:"",lantai:""});
+  return getRows(F);
+}
+function exportName(mode, val){
+  var yr = new Date().getFullYear();
+  if (mode === "all") return "Database_Siswa_SMAN28_" + yr + ".xlsx";
+  if (mode === "tingkat") return "Database_Siswa_Kelas_" + val + ".xlsx";
+  if (mode === "kelas") return "Database_Siswa_" + val.replace(" ", "_") + ".xlsx";
+  return "Database_Siswa_Filter_SMAN28_" + yr + ".xlsx";
+}
+async function buildXlsx(rows){
+  var wb = new ExcelJS.Workbook();
+  wb.creator = "SMAN 28 Student Database";
+  var ws = wb.addWorksheet("Database Siswa");
+  var heads = ["NIS","Nama Lengkap","Tempat Lahir","Tanggal Lahir","Gender","Agama","Kelas Paralel","Gedung","Lantai"];
+  ws.addRow(heads);
+  rows.forEach(function(s){
+    var lc = loc(s), p = s.tgl.split("-");
+    ws.addRow([String(s.nis), s.nama, s.tempat, new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])), genderText(s.gender), s.agama, s.kelas, lc.g, lc.l]);
+  });
+  var hr = ws.getRow(1);
+  hr.height = 24;
+  hr.eachCell(function(c, i){
+    c.font = {bold:true, color:{argb:"FFFFFFFF"}, size:12};
+    c.fill = {type:"pattern", pattern:"solid", fgColor:{argb: i % 2 ? "FFE5322D" : "FFFF6A1A"}};
+    c.alignment = {vertical:"middle", horizontal:"center"};
+  });
+  ws.getColumn(1).numFmt = "@";
+  ws.getColumn(4).numFmt = "DD/MM/YYYY";
+  ws.eachRow(function(row, n){ if (n > 1) row.getCell(1).numFmt = "@"; });
+  ws.columns.forEach(function(col, i){
+    var w = heads[i].length;
+    col.eachCell({includeEmpty:false}, function(c){
+      var v = c.value instanceof Date ? "00/00/0000" : String(c.value == null ? "" : c.value);
+      if (v.length > w) w = v.length;
+    });
+    col.width = Math.min(Math.max(w + 3, 10), 42);
+  });
+  ws.views = [{state:"frozen", ySplit:1}];
+  var buf = await wb.xlsx.writeBuffer();
+  return new Blob([buf], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+/* ===== UI helpers, charts, dashboard ===== */
+var IC = {
+  flame:"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z",
+  dash:"M3 3h7v9H3z M14 3h7v5h-7z M14 12h7v9h-7z M3 16h7v5H3z",
+  users:"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
+  building:"M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2 M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2 M10 6h4 M10 10h4 M10 14h4 M10 18h4",
+  book:"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20",
+  plus:"M12 5v14 M5 12h14",
+  down:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3",
+  search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16 M21 21l-4.3-4.3",
+  eye:"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12 M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6",
+  edit:"M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z",
+  trash:"M3 6h18 M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",
+  x:"M18 6 6 18 M6 6l12 12",
+  reset:"M3 12a9 9 0 1 0 3-6.7L3 8 M3 3v5h5",
+  prev:"M15 18l-6-6 6-6",
+  next:"M9 18l6-6-6-6",
+  dice:"M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z M8 8h.01 M16 8h.01 M8 16h.01 M16 16h.01 M12 12h.01",
+  inbox:"M22 12h-6l-2 3h-4l-2-3H2 M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"
+};
+function ic(n){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + IC[n] + '"/></svg>'; }
+
+var VIEW = "dash", PAGE = 1, PER = 10, ROOM = "";
+var NAV = [["dash","Dashboard","dash"],["siswa","Data Siswa","users"],["gedung","Gedung & Denah","building"],["kelas","Class Management","book"]];
+
+function navHtml(){ return NAV.map(function(n){ return '<button class="' + (VIEW === n[0] ? "on" : "") + '" onclick="go(\'' + n[0] + '\')">' + ic(n[2]) + '<span>' + n[1] + '</span></button>'; }).join(""); }
+function tabsHtml(){ return NAV.map(function(n){ return '<button class="' + (VIEW === n[0] ? "on" : "") + '" onclick="go(\'' + n[0] + '\')">' + ic(n[2]) + '<span>' + n[1].split(" ")[0] + '</span></button>'; }).join(""); }
+function renderShell(){
+  document.getElementById("side").innerHTML =
+    '<div class="brand"><div class="logo">' + ic("flame") + '</div><div><b>SMAN 28</b><span>Student Database</span></div></div>' +
+    '<nav class="nav">' + navHtml() + '</nav>' +
+    '<div class="sidefoot"><button class="btn sm" onclick="askReset()">' + ic("reset") + 'Reset data contoh</button><p>Data dummy fiktif, tersimpan di browser ini.</p></div>';
+  document.getElementById("tabs").innerHTML = tabsHtml();
+}
+function go(v){ VIEW = v; PAGE = 1; render(); window.scrollTo(0, 0); }
+function render(){
+  renderShell();
+  var m = document.getElementById("main");
+  if (VIEW === "dash") m.innerHTML = dashHtml();
+  else if (VIEW === "siswa") { m.innerHTML = siswaHtml(); drawTable(); }
+  else if (VIEW === "gedung") m.innerHTML = gedungHtml();
+  else m.innerHTML = kelasHtml();
+}
+var toastT;
+function toast(msg){
+  var o = document.createElement("div"); o.className = "toast"; o.textContent = msg; document.body.appendChild(o);
+  clearTimeout(toastT); toastT = setTimeout(function(){ o.remove(); }, 2800);
+  setTimeout(function(){ o.remove(); }, 3000);
+}
+
+/* ===== charts (SVG, digambar sendiri) ===== */
+var PAL = ["#ff5a2b","#ffa83a","#e5322d","#ffd37a","#c2410c","#ff7e6b"];
+function donut(a, b){
+  var t = a + b, r = 52, C = 2 * Math.PI * r;
+  var la = t ? C * a / t : 0, lb = t ? C * b / t : 0;
+  return '<svg viewBox="0 0 160 160" role="img" aria-label="Distribusi gender"><defs><linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6a1a"/><stop offset="1" stop-color="#ffc15a"/></linearGradient><linearGradient id="gB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e5322d"/><stop offset="1" stop-color="#ff7e6b"/></linearGradient></defs>' +
+    '<circle cx="80" cy="80" r="' + r + '" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="20"/>' +
+    (t ? '<circle cx="80" cy="80" r="' + r + '" fill="none" stroke="url(#gA)" stroke-width="20" stroke-dasharray="' + la + ' ' + C + '" transform="rotate(-90 80 80)"/>' +
+    '<circle cx="80" cy="80" r="' + r + '" fill="none" stroke="url(#gB)" stroke-width="20" stroke-dasharray="' + lb + ' ' + C + '" stroke-dashoffset="' + (-la) + '" transform="rotate(-90 80 80)"/>' : '') +
+    '<text x="80" y="82" text-anchor="middle" style="fill:#f6ece6;font-size:26px;font-family:Space Grotesk,sans-serif;font-weight:700">' + t + '</text><text x="80" y="100" text-anchor="middle">siswa</text></svg>';
+}
+function barsH(items){
+  var max = Math.max.apply(null, items.map(function(i){ return i[1]; }).concat([1])), rowH = 34, W = 420, lw = 128, h = items.length * rowH + 4;
+  var s = '<svg viewBox="0 0 ' + W + ' ' + h + '" role="img" aria-label="Distribusi agama"><defs><linearGradient id="gH" x1="0" x2="1"><stop offset="0" stop-color="#e5322d"/><stop offset="1" stop-color="#ffa83a"/></linearGradient></defs>';
+  items.forEach(function(it, i){
+    var y = i * rowH + 4, w = (W - lw - 46) * it[1] / max;
+    s += '<text x="0" y="' + (y + 17) + '">' + esc(it[0]) + '</text><rect x="' + lw + '" y="' + y + '" width="' + (W - lw - 46) + '" height="22" rx="7" fill="rgba(255,255,255,.06)"/>' +
+      '<rect x="' + lw + '" y="' + y + '" width="' + Math.max(w, it[1] ? 4 : 0) + '" height="22" rx="7" fill="url(#gH)"/>' +
+      '<text x="' + (W - 40) + '" y="' + (y + 16) + '" style="fill:#f6ece6;font-weight:600">' + it[1] + '</text>';
+  });
+  return s + '</svg>';
+}
+function barsV(items){
+  var max = Math.max.apply(null, items.map(function(i){ return i[1]; }).concat([1])), W = 360, H = 210, base = 170, bw = 70, gap = (W - 3 * bw) / 4;
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Siswa per tingkat kelas"><defs><linearGradient id="gV" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5322d"/><stop offset="1" stop-color="#ffc15a"/></linearGradient></defs>';
+  [0, .5, 1].forEach(function(f){ var y = base - 140 * f; s += '<line x1="0" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="rgba(255,255,255,.07)"/><text x="0" y="' + (y - 4) + '">' + Math.round(max * f) + '</text>'; });
+  items.forEach(function(it, i){
+    var x = gap + i * (bw + gap), h = 140 * it[1] / max;
+    s += '<rect x="' + x + '" y="' + (base - h) + '" width="' + bw + '" height="' + h + '" rx="9" fill="url(#gV)"/>' +
+      '<text x="' + (x + bw / 2) + '" y="' + (base - h - 7) + '" text-anchor="middle" style="fill:#f6ece6;font-weight:600">' + it[1] + '</text>' +
+      '<text x="' + (x + bw / 2) + '" y="' + (base + 20) + '" text-anchor="middle">Kelas ' + it[0] + '</text>';
+  });
+  return s + '</svg>';
+}
+
+function dashHtml(){
+  var rows = getRows(F), L = 0, P = 0, ag = {}, tg = {X:0, XI:0, XII:0}, ks = {};
+  rows.forEach(function(s){ if (s.gender === "L") L++; else P++; ag[s.agama] = (ag[s.agama] || 0) + 1; tg[parseLabel(s.kelas).t]++; ks[s.kelas] = 1; });
+  var nk = hasFilter() ? Object.keys(ks).length : classes.length;
+  var info = hasFilter() ? '<span class="chip">Mengikuti filter aktif: ' + rows.length + ' dari ' + students.length + ' siswa</span> <button class="btn sm" onclick="emptyFilter();render()">' + ic("x") + 'Hapus filter</button>' : '<span class="chip">Menampilkan seluruh data</span>';
+  function st(l, n, i){ return '<div class="glass stat"><small>' + ic(i) + l + '</small><div class="n">' + n + '</div></div>'; }
+  return '<div class="top"><div><h1>Dashboard</h1><p>Ringkasan data siswa SMAN 28</p></div><div class="chips">' + info + '</div></div>' +
+    '<div class="grid g4">' + st("Total siswa", rows.length, "users") + st("Siswa laki-laki", L, "users") + st("Siswa perempuan", P, "users") + st("Jumlah kelas", nk, "book") + '</div>' +
+    '<div class="grid g2"><div class="glass chart"><h3 class="card-t">Distribusi agama</h3>' + barsH(AGAMA.map(function(a){ return [a, ag[a] || 0]; })) + '</div>' +
+    '<div class="glass chart"><h3 class="card-t">Distribusi gender</h3><div style="max-width:210px;margin:0 auto">' + donut(L, P) + '</div><div class="leg"><span><i style="background:#ff8a1f"></i>Laki-laki ' + L + '</span><span><i style="background:#e5322d"></i>Perempuan ' + P + '</span></div></div></div>' +
+    '<div class="glass chart"><h3 class="card-t">Siswa per tingkat kelas<span>X, XI, XII</span></h3><div style="max-width:520px;margin:0 auto">' + barsV([["X", tg.X], ["XI", tg.XI], ["XII", tg.XII]]) + '</div></div>';
+}
+/* ===== Data Siswa: toolbar, tabel, pagination, CRUD ===== */
+function opts(arr, sel, first){
+  return (first != null ? '<option value="">' + esc(first) + '</option>' : '') + arr.map(function(a){
+    var v = Array.isArray(a) ? a[0] : a, t = Array.isArray(a) ? a[1] : a;
+    return '<option value="' + esc(v) + '"' + (String(v) === String(sel) ? " selected" : "") + '>' + esc(t) + '</option>';
+  }).join("");
+}
+function sortedClassLabels(t){ return classes.filter(function(c){ return !t || c.tingkat === t; }).map(function(c){ return c.label; }).sort(function(a, b){ return classKey(a) - classKey(b); }); }
+function fld(label, inner){ return '<div class="field"><label>' + label + '</label>' + inner + '</div>'; }
+
+function siswaHtml(){
+  var fields = [["all","Semua kolom"],["nis","NIS"],["nama","Nama"],["tempat","Tempat lahir"],["tgl","Tanggal lahir"],["gender","Gender"],["agama","Agama"],["kelas","Kelas"]];
+  return '<div class="top"><div><h1>Data Siswa</h1><p>Cari, filter, urutkan, dan kelola seluruh siswa</p></div>' +
+    '<div class="chips"><button class="btn fire" onclick="formS()">' + ic("plus") + 'Tambah Siswa</button><button class="btn" onclick="exportModal()">' + ic("down") + 'Export Excel</button></div></div>' +
+    '<div class="glass grid" style="gap:12px">' +
+    '<div class="filters" style="grid-template-columns:minmax(140px,200px) minmax(0,1fr)">' +
+      fld("Cari berdasarkan", '<select id="sf" onchange="F.field=this.value;PAGE=1;drawTable()">' + opts(fields, F.field) + '</select>') +
+      fld("Kata kunci", '<input id="sq" type="search" placeholder="NIS, nama, tempat lahir, 2010-05-12, perempuan, Katolik, XI 3" value="' + esc(F.q) + '" oninput="F.q=this.value;PAGE=1;drawTable()">') +
+    '</div><div class="filters">' +
+      fld("Agama", '<select onchange="setF(\'agama\',this.value)">' + opts(AGAMA, F.agama, "Semua agama") + '</select>') +
+      fld("Gender", '<select onchange="setF(\'gender\',this.value)">' + opts([["L","Laki-laki"],["P","Perempuan"]], F.gender, "Semua gender") + '</select>') +
+      fld("Tingkat", '<select onchange="setF(\'tingkat\',this.value)">' + opts(TINGKAT, F.tingkat, "X / XI / XII") + '</select>') +
+      fld("Kelas paralel", '<select onchange="setF(\'kelas\',this.value)">' + opts(sortedClassLabels(F.tingkat), F.kelas, "Semua kelas") + '</select>') +
+      fld("Gedung", '<select onchange="setF(\'gedung\',this.value)">' + opts([["A","Gedung A"],["B","Gedung B"]], F.gedung, "Semua gedung") + '</select>') +
+      fld("Lantai", '<select onchange="setF(\'lantai\',this.value)">' + opts([["1","Lantai 1"],["2","Lantai 2"],["3","Lantai 3"]], F.lantai, "Semua lantai") + '</select>') +
+    '</div></div><div id="tbl" class="glass" style="display:flex;flex-direction:column;gap:12px"></div>';
+}
+function setF(k, v){
+  F[k] = v; PAGE = 1;
+  if (k === "tingkat" && F.kelas && parseLabel(F.kelas).t !== v && v) F.kelas = "";
+  if (k === "kelas" && v) F.tingkat = parseLabel(v).t;
+  render();
+}
+function sortBy(k){ if (SORT.key === k) SORT.dir *= -1; else { SORT.key = k; SORT.dir = 1; } PAGE = 1; drawTable(); }
+function setSortKey(k){ SORT.key = k; SORT.dir = 1; PAGE = 1; drawTable(); }
+function flipSort(){ SORT.dir *= -1; drawTable(); }
+function setPer(n){ PER = +n; PAGE = 1; drawTable(); }
+function setPage(p){ PAGE = p; drawTable(); document.getElementById("tbl").scrollIntoView({block:"start", behavior:"smooth"}); }
+
+function drawTable(){
+  var box = document.getElementById("tbl"); if (!box) return;
+  var rows = getRows(F), total = rows.length, pages = Math.max(1, Math.ceil(total / PER));
+  if (PAGE > pages) PAGE = pages;
+  var st = (PAGE - 1) * PER, part = rows.slice(st, st + PER);
+  var sortOpts = COLS.map(function(c){ return [c.k, c.t]; });
+  var head = '<div class="bar"><div class="chips"><span class="chip">' + total + ' data ditemukan</span><span class="chip">dari ' + students.length + ' total</span>' +
+    (hasFilter() ? '<button class="btn sm" onclick="emptyFilter();render()">' + ic("x") + 'Hapus filter</button>' : '') + '</div>' +
+    '<div class="chips" style="align-items:center"><select style="width:auto" aria-label="Urutkan berdasarkan" onchange="setSortKey(this.value)">' + opts(sortOpts, SORT.key) + '</select>' +
+    '<button class="btn sm" onclick="flipSort()">' + (SORT.dir === 1 ? "&#9650; " : "&#9660; ") + dirLabel(SORT.key, SORT.dir) + '</button></div></div>';
+  var body;
+  if (!total) body = '<div class="empty"><div class="ico">' + ic("inbox") + '</div><h3>Tidak ada data yang cocok</h3><p>Ubah kata kunci atau kurangi filter yang aktif.</p></div>';
+  else {
+    var th = COLS.map(function(c){ return '<th onclick="sortBy(\'' + c.k + '\')" title="Urutkan">' + c.t + '<span class="ar">' + (SORT.key === c.k ? (SORT.dir === 1 ? "&#9650;" : "&#9660;") : "&#8645;") + '</span></th>'; }).join("") + '<th style="cursor:default">Aksi</th>';
+    var tr = part.map(function(s){
+      var lc = loc(s);
+      return '<tr><td>' + esc(s.nis) + '</td><td>' + esc(s.nama) + '</td><td>' + esc(s.tempat) + ', ' + fmtDate(s.tgl) + '</td><td><span class="tag ' + s.gender + '">' + genderText(s.gender) + '</span></td><td>' + esc(s.agama) + '</td><td>' + esc(s.kelas) + '</td><td>' + lc.g + '</td><td>' + lc.l + '</td>' +
+        '<td><div class="chips"><button class="btn sm" aria-label="Detail" onclick="viewS(\'' + s.nis + '\')">' + ic("eye") + '</button><button class="btn sm" aria-label="Edit" onclick="formS(\'' + s.nis + '\')">' + ic("edit") + '</button><button class="btn sm danger" aria-label="Hapus" onclick="delS(\'' + s.nis + '\')">' + ic("trash") + '</button></div></td></tr>';
+    }).join("");
+    body = '<div class="tw"><table><thead><tr>' + th.replace('<th onclick="sortBy(\'tgl\')" title="Urutkan">Tanggal Lahir', '<th onclick="sortBy(\'tgl\')" title="Urutkan">Tempat, Tgl Lahir') + '</tr></thead><tbody>' + tr + '</tbody></table></div>';
+  }
+  var pg = "";
+  if (total){
+    var a = Math.max(1, PAGE - 2), b = Math.min(pages, a + 4); a = Math.max(1, b - 4);
+    pg += '<button class="btn sm" ' + (PAGE === 1 ? "disabled" : "") + ' onclick="setPage(' + (PAGE - 1) + ')" aria-label="Sebelumnya">' + ic("prev") + '</button>';
+    for (var i = a; i <= b; i++) pg += '<button class="btn sm' + (i === PAGE ? " fire" : "") + '" onclick="setPage(' + i + ')">' + i + '</button>';
+    pg += '<button class="btn sm" ' + (PAGE === pages ? "disabled" : "") + ' onclick="setPage(' + (PAGE + 1) + ')" aria-label="Berikutnya">' + ic("next") + '</button>';
+  }
+  var foot = '<div class="pager"><span>' + (total ? "Menampilkan " + (st + 1) + "-" + (st + part.length) + " dari " + total + " data" : "0 data") + '</span>' +
+    '<span class="chips" style="align-items:center">Per halaman <select style="width:auto" aria-label="Data per halaman" onchange="setPer(this.value)">' + opts([10, 25, 50, 100], PER) + '</select></span><div class="pg">' + pg + '</div></div>';
+  box.innerHTML = head + body + foot;
+}
+
+/* ===== modal ===== */
+function openModal(h){ var o = document.getElementById("overlay"); o.innerHTML = '<div class="back" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true">' + h + '</div></div>'; var f = o.querySelector("input,select"); if (f) f.focus(); }
+function closeModal(){ document.getElementById("overlay").innerHTML = ""; }
+function findS(nis){ for (var i = 0; i < students.length; i++) if (students[i].nis === nis) return students[i]; return null; }
+
+function viewS(nis){
+  var s = findS(nis); if (!s) return; var lc = loc(s);
+  var rows = [["NIS", s.nis], ["Nama lengkap", s.nama], ["Tempat lahir", s.tempat], ["Tanggal lahir", fmtDate(s.tgl)], ["Gender", genderText(s.gender)], ["Agama", s.agama], ["Kelas", s.kelas], ["Gedung", lc.g], ["Lantai", lc.l]];
+  openModal('<h2>Detail Siswa</h2><dl class="det">' + rows.map(function(r){ return '<dt>' + r[0] + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join("") + '</dl><div class="mfoot"><button class="btn" onclick="closeModal()">Tutup</button><button class="btn fire" onclick="formS(\'' + s.nis + '\')">' + ic("edit") + 'Edit</button></div>');
+}
+function formS(nis){
+  var s = nis ? findS(nis) : {nis:uniqueNIS(), nama:"", tempat:"", tgl:"", gender:"L", agama:"Islam", kelas:sortedClassLabels("")[0] || ""};
+  if (!s) return;
+  openModal('<h2>' + (nis ? "Edit Siswa" : "Tambah Siswa") + '</h2><div class="fgrid">' +
+    '<div class="field"><label for="f_nis">NIS (5 digit)</label><div style="display:flex;gap:6px"><input id="f_nis" inputmode="numeric" maxlength="5" value="' + esc(s.nis) + '"><button class="btn sm" type="button" title="NIS acak baru" aria-label="NIS acak baru" onclick="document.getElementById(\'f_nis\').value=uniqueNIS()">' + ic("dice") + '</button></div></div>' +
+    '<div class="field"><label for="f_kelas">Kelas paralel</label><select id="f_kelas">' + opts(sortedClassLabels(""), s.kelas) + '</select></div>' +
+    '<div class="field full"><label for="f_nama">Nama lengkap</label><input id="f_nama" value="' + esc(s.nama) + '" maxlength="60"></div>' +
+    '<div class="field"><label for="f_tempat">Tempat lahir</label><input id="f_tempat" value="' + esc(s.tempat) + '" maxlength="40"></div>' +
+    '<div class="field"><label for="f_tgl">Tanggal lahir</label><input id="f_tgl" type="date" value="' + esc(s.tgl) + '"></div>' +
+    '<div class="field"><label for="f_gender">Gender</label><select id="f_gender">' + opts([["L","Laki-laki"],["P","Perempuan"]], s.gender) + '</select></div>' +
+    '<div class="field"><label for="f_agama">Agama</label><select id="f_agama">' + opts(AGAMA, s.agama) + '</select></div></div>' +
+    '<div class="err" id="ferr" role="alert"></div><div class="mfoot"><button class="btn" onclick="closeModal()">Batal</button><button class="btn fire" onclick="saveS(' + (nis ? "'" + nis + "'" : "null") + ')">Simpan</button></div>');
+}
+function saveS(orig){
+  function v(id){ return document.getElementById(id).value.trim(); }
+  var o = {nis:v("f_nis"), nama:v("f_nama").replace(/\s+/g, " "), tempat:v("f_tempat"), tgl:v("f_tgl"), gender:v("f_gender"), agama:v("f_agama"), kelas:v("f_kelas")}, e = "";
+  var dup = students.some(function(s){ return s.nis === o.nis && s.nis !== orig; });
+  var d = new Date(o.tgl + "T00:00:00"), now = new Date(), age = (now - d) / 31557600000;
+  if (!/^\d{5}$/.test(o.nis)) e = "NIS harus tepat 5 digit angka.";
+  else if (dup) e = "NIS " + o.nis + " sudah dipakai. Pakai tombol dadu untuk NIS baru.";
+  else if (o.nama.length < 3 || !/^[A-Za-z .'-]+$/.test(o.nama)) e = "Nama lengkap minimal 3 huruf, tanpa angka.";
+  else if (o.tempat.length < 2) e = "Tempat lahir wajib diisi.";
+  else if (!o.tgl || isNaN(d.getTime())) e = "Tanggal lahir wajib diisi.";
+  else if (age < 12 || age > 22) e = "Tanggal lahir tidak wajar untuk siswa SMA (usia 12-22 tahun).";
+  else if (!o.kelas || !classInfo(o.kelas)) e = "Pilih kelas yang tersedia. Tambahkan dulu di Class Management.";
+  if (e){ document.getElementById("ferr").textContent = e; return; }
+  if (orig){ for (var i = 0; i < students.length; i++) if (students[i].nis === orig) students[i] = o; }
+  else students.push(o);
+  saveAll(); closeModal(); toast(orig ? "Data siswa diperbarui" : "Siswa baru ditambahkan"); render();
+}
+function delS(nis){
+  var s = findS(nis); if (!s) return;
+  openModal('<h2>Hapus siswa?</h2><p>' + esc(s.nama) + ' (NIS ' + s.nis + ', ' + esc(s.kelas) + ') akan dihapus dari database.</p><div class="mfoot"><button class="btn" onclick="closeModal()">Batal</button><button class="btn fire" onclick="doDel(\'' + s.nis + '\')">' + ic("trash") + 'Hapus</button></div>');
+}
+function doDel(nis){ students = students.filter(function(s){ return s.nis !== nis; }); saveAll(); closeModal(); toast("Data siswa dihapus"); render(); }
+function askReset(){
+  openModal('<h2>Reset data contoh?</h2><p>Semua perubahan dihapus dan database kembali ke data dummy awal.</p><div class="mfoot"><button class="btn" onclick="closeModal()">Batal</button><button class="btn fire" onclick="doReset()">Reset</button></div>');
+}
+function doReset(){ resetData(); F = {q:"", field:"all", agama:"", gender:"", tingkat:"", kelas:"", gedung:"", lantai:""}; closeModal(); toast("Data dikembalikan ke contoh awal"); render(); }
+/* ===== Gedung & Denah, Class Management, Export, boot ===== */
+var GL = {g:"", l:""};
+function classCounts(){
+  var m = {};
+  classes.forEach(function(c){ m[c.label] = {n:0, L:0, P:0}; });
+  students.forEach(function(s){ var x = m[s.kelas]; if (x){ x.n++; x[s.gender]++; } });
+  return m;
+}
+function setGL(k, v){ GL[k] = v; ROOM = ""; render(); }
+function pickRoom(l){ ROOM = ROOM === l ? "" : l; render(); }
+function seeClass(l){ F = {q:"", field:"all", agama:"", gender:"", tingkat:parseLabel(l).t, kelas:l, gedung:"", lantai:""}; go("siswa"); }
+
+function gedungHtml(){
+  var cc = classCounts(), blds = ["A", "B"], out = "";
+  var hit = classes.filter(function(c){ return (!GL.g || c.gedung === GL.g) && (!GL.l || String(c.lantai) === GL.l); });
+  var hitS = hit.reduce(function(a, c){ return a + cc[c.label].n; }, 0);
+  out += '<div class="top"><div><h1>Gedung &amp; Denah</h1><p>Lokasi kelas dan jumlah siswa di setiap lantai</p></div></div>';
+  out += '<div class="glass grid" style="gap:12px"><div class="filters" style="grid-template-columns:repeat(2,minmax(0,1fr))">' +
+    fld("Gedung", '<select onchange="setGL(\'g\',this.value)">' + opts([["A","Gedung A"],["B","Gedung B"]], GL.g, "Semua gedung") + '</select>') +
+    fld("Lantai", '<select onchange="setGL(\'l\',this.value)">' + opts([["1","Lantai 1"],["2","Lantai 2"],["3","Lantai 3"]], GL.l, "Semua lantai") + '</select>') + '</div>' +
+    '<div class="chips"><span class="chip">' + hit.length + ' kelas</span><span class="chip">' + hitS + ' siswa</span>' +
+    hit.map(function(c){ return '<span class="chip" style="color:var(--fg)">' + esc(c.label) + '</span>'; }).join("") + '</div></div>';
+  out += '<div class="bld">';
+  blds.forEach(function(b){
+    if (GL.g && GL.g !== b) return;
+    var inB = classes.filter(function(c){ return c.gedung === b; });
+    var sB = inB.reduce(function(a, c){ return a + cc[c.label].n; }, 0);
+    out += '<div class="glass"><h3 class="card-t">Gedung ' + b + '<span>' + inB.length + ' kelas, ' + sB + ' siswa</span></h3>';
+    [3, 2, 1].forEach(function(f){
+      if (GL.l && GL.l !== String(f)) return;
+      var rs = classes.filter(function(c){ return c.gedung === b && c.lantai === f; }).sort(function(x, y){ return classKey(x.label) - classKey(y.label); });
+      var sf = rs.reduce(function(a, c){ return a + cc[c.label].n; }, 0);
+      out += '<div class="floor"><div class="fl">Lantai ' + f + '</div><div><div class="rooms">' +
+        (rs.length ? rs.map(function(c){ return '<button class="room' + (ROOM === c.label ? " on" : "") + '" onclick="pickRoom(\'' + c.label + '\')"><b>' + esc(c.label) + '</b><small>' + cc[c.label].n + ' siswa</small></button>'; }).join("") : '<span class="none">Tidak ada kelas di lantai ini</span>') +
+        '</div><div class="fsum">' + rs.length + ' kelas, ' + sf + ' siswa</div></div></div>';
+    });
+    out += '</div>';
+  });
+  out += '</div>';
+  if (ROOM && classInfo(ROOM)){
+    var c = classInfo(ROOM), x = cc[ROOM];
+    out += '<div class="glass"><h3 class="card-t">Kelas ' + esc(c.label) + '<span>Gedung ' + c.gedung + ', Lantai ' + c.lantai + '</span></h3>' +
+      '<div class="chips"><span class="chip">' + x.n + ' siswa</span><span class="chip">' + x.L + ' laki-laki</span><span class="chip">' + x.P + ' perempuan</span></div>' +
+      '<div class="mfoot" style="justify-content:flex-start"><button class="btn fire" onclick="seeClass(\'' + c.label + '\')">' + ic("users") + 'Lihat siswa kelas ini</button></div></div>';
+  }
+  return out;
+}
+
+/* ===== Class Management ===== */
+function kelasHtml(){
+  var cc = classCounts(), list = classes.slice().sort(function(a, b){ return classKey(a.label) - classKey(b.label); });
+  var tr = list.map(function(c){
+    var n = cc[c.label].n;
+    return '<tr><td><b>' + esc(c.label) + '</b></td><td>' + c.tingkat + '</td><td>' + c.gedung + '</td><td>' + c.lantai + '</td><td>' + n + '</td><td><div class="chips"><button class="btn sm" onclick="seeClass(\'' + c.label + '\')">' + ic("eye") + '</button><button class="btn sm danger" aria-label="Hapus kelas" onclick="delClass(\'' + c.label + '\')">' + ic("trash") + '</button></div></td></tr>';
+  }).join("");
+  return '<div class="top"><div><h1>Class Management</h1><p>Tambah kelas baru dan atur lokasinya</p></div></div>' +
+    '<div class="glass"><h3 class="card-t">Tambah kelas</h3><div class="filters">' +
+    fld("Tingkat", '<select id="c_t">' + opts(TINGKAT, "X") + '</select>') +
+    fld("Nomor paralel", '<input id="c_n" type="number" min="1" max="15" value="8">') +
+    fld("Gedung", '<select id="c_g">' + opts(["A", "B"], "A") + '</select>') +
+    fld("Lantai", '<select id="c_l">' + opts(["1", "2", "3"], "2") + '</select>') + '</div>' +
+    '<div class="err" id="cerr" role="alert" style="margin-top:8px"></div><div class="mfoot" style="justify-content:flex-start"><button class="btn fire" onclick="addClass()">' + ic("plus") + 'Tambah Kelas</button></div></div>' +
+    '<div class="glass"><h3 class="card-t">Daftar kelas<span>' + classes.length + ' kelas</span></h3><div class="tw"><table style="min-width:520px"><thead><tr><th style="cursor:default">Kelas</th><th style="cursor:default">Tingkat</th><th style="cursor:default">Gedung</th><th style="cursor:default">Lantai</th><th style="cursor:default">Siswa</th><th style="cursor:default">Aksi</th></tr></thead><tbody>' + tr + '</tbody></table></div></div>';
+}
+function addClass(){
+  var t = document.getElementById("c_t").value, n = parseInt(document.getElementById("c_n").value, 10);
+  var g = document.getElementById("c_g").value, l = parseInt(document.getElementById("c_l").value, 10), e = "";
+  var label = classLabel(t, n);
+  if (!(n >= 1 && n <= 15)) e = "Nomor paralel harus angka 1 sampai 15.";
+  else if (classInfo(label)) e = "Kelas " + label + " sudah ada di Gedung " + classInfo(label).gedung + " Lantai " + classInfo(label).lantai + ".";
+  else if (g === "A" && l === 1) e = "Gedung A Lantai 1 tidak memiliki ruang kelas.";
+  if (e){ document.getElementById("cerr").textContent = e; return; }
+  classes.push({label:label, tingkat:t, no:n, gedung:g, lantai:l});
+  saveAll(); toast("Kelas " + label + " ditambahkan"); render();
+}
+function delClass(l){
+  var n = students.filter(function(s){ return s.kelas === l; }).length;
+  if (n){ toast("Kelas " + l + " masih berisi " + n + " siswa. Pindahkan atau hapus siswanya dulu."); return; }
+  openModal('<h2>Hapus kelas ' + esc(l) + '?</h2><p>Kelas ini kosong dan akan dihapus dari denah.</p><div class="mfoot"><button class="btn" onclick="closeModal()">Batal</button><button class="btn fire" onclick="doDelClass(\'' + l + '\')">Hapus</button></div>');
+}
+function doDelClass(l){ classes = classes.filter(function(c){ return c.label !== l; }); saveAll(); closeModal(); toast("Kelas dihapus"); render(); }
+
+/* ===== Export Excel ===== */
+function expState(){
+  var r = document.querySelector('input[name="em"]:checked');
+  var mode = r ? r.value : "all", val = "";
+  if (mode === "tingkat") val = document.getElementById("e_t").value;
+  if (mode === "kelas") val = document.getElementById("e_k").value;
+  return {mode:mode, val:val};
+}
+function exportModal(){
+  openModal('<h2>Export Excel</h2><div class="radio">' +
+    '<label><input type="radio" name="em" value="all" checked onchange="updPv()">Seluruh database</label>' +
+    '<label><input type="radio" name="em" value="tingkat" onchange="updPv()">Per tingkat <select id="e_t" style="width:auto;margin-left:auto" onchange="document.querySelector(\'input[value=tingkat]\').checked=true;updPv()">' + opts(TINGKAT, "X") + '</select></label>' +
+    '<label><input type="radio" name="em" value="kelas" onchange="updPv()">Satu kelas paralel <select id="e_k" style="width:auto;margin-left:auto" onchange="document.querySelector(\'input[value=kelas]\').checked=true;updPv()">' + opts(sortedClassLabels(""), "") + '</select></label>' +
+    '<label><input type="radio" name="em" value="filter" onchange="updPv()">Sesuai filter aktif</label></div>' +
+    '<div class="pv" id="pv"></div><div class="err" id="eerr" role="alert"></div>' +
+    '<div class="mfoot"><button class="btn" onclick="closeModal()">Batal</button><button class="btn fire" id="ebtn" onclick="doExport()">' + ic("down") + 'Unduh .xlsx</button></div>');
+  updPv();
+}
+function updPv(){
+  var s = expState(), rows = exportRows(s.mode, s.val);
+  document.getElementById("pv").innerHTML = '<b>' + rows.length + '</b> siswa akan diunduh<br><small style="color:var(--mut)">' + esc(exportName(s.mode, s.val)) + (s.mode === "filter" && !hasFilter() ? " (tidak ada filter aktif, hasilnya seluruh data)" : "") + '</small>';
+}
+async function doExport(){
+  var s = expState(), rows = exportRows(s.mode, s.val), eerr = document.getElementById("eerr");
+  if (!rows.length){ eerr.textContent = "Tidak ada data untuk diunduh dengan pilihan ini."; return; }
+  if (typeof ExcelJS === "undefined"){ eerr.textContent = "Pustaka Excel belum termuat. Muat ulang halaman lalu coba lagi."; return; }
+  var btn = document.getElementById("ebtn"); btn.disabled = true; eerr.textContent = "";
+  var name = exportName(s.mode, s.val);
+  try {
+    var blob = await buildXlsx(rows), dl = null;
+    try { dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null; } catch (x) { dl = null; }
+    if (dl){ await dl.save({filename:name, data:blob}); }
+    else {
+      var u = URL.createObjectURL(blob), a = document.createElement("a");
+      a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
+    }
+    closeModal(); toast("File " + name + " siap");
+  } catch (err){
+    btn.disabled = false;
+    var c = err && err.code;
+    eerr.textContent = c === "declined" ? "Unduhan dibatalkan." : c === "host_unavailable" ? "Aplikasi ini tidak bisa menyimpan file. Buka di browser atau komputer." : "Gagal membuat file: " + ((err && err.message) || "kesalahan tidak dikenal");
+  }
+}
+
+render();
+</script>
+
+</body></html>
